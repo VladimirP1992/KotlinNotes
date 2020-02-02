@@ -2,7 +2,7 @@ package ru.geekbrains.kotlinnotes.data
 
 import ru.geekbrains.kotlinnotes.data.entity.Note
 
-class NotesRepository {
+object NotesRepository {
     val notes: List<Note> = listOf(
         Note("Note 1 title", "Note 1 text", 0xfff06292.toInt()),
         Note("Note 2 title", "Note 2 text", 0xff9575cd.toInt()),
