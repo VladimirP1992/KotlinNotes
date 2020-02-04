@@ -2,11 +2,11 @@ package ru.geekbrains.kotlinnotes.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.geekbrains.kotlinnotes.R
-import ru.geekbrains.kotlinnotes.data.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,10 +17,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        rv_notes.layoutManager
+
+        rv_notes.layoutManager = GridLayoutManager(this, 2)
+        adapter = NotesRVAdapter()
+        rv_notes.adapter = adapter
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.viewState().observe(this, Observer {
+        viewModel.getViewStateLiveData().observe(this, Observer {
             it?.let {
                 adapter.notes = it.notes
             }
