@@ -19,7 +19,9 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         rv_notes.layoutManager = GridLayoutManager(this, 2)
-        adapter = NotesRVAdapter()
+        adapter = NotesRVAdapter { note ->
+            NoteEditActivity.start(this, note)
+        }
         rv_notes.adapter = adapter
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
@@ -28,6 +30,10 @@ class MainActivity : AppCompatActivity() {
                 adapter.notes = it.notes
             }
         })
+
+        fab_new_note.setOnClickListener {
+            NoteEditActivity.start(this)
+        }
 
     }
 }
