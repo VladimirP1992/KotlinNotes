@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">KotlinNotes</string>
+    <string name="defaultNoteTitle">Note title</string>
+    <string name="defaultNoteBody">Note body</string>
 </resources>
