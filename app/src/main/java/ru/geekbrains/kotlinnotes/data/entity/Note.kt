@@ -6,8 +6,9 @@ import java.util.*
 
 @Parcelize
 data class Note(
-    val id:String,
-    val title: String, val body: String,
+    val id:String = "",
+    val title: String = "",
+    val body: String = "",
     val color: Color = Color.YELLOW,
     val lastChanged: Date = Date()
 ):Parcelable{
