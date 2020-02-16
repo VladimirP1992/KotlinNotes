@@ -2,4 +2,9 @@
     <string name="app_name">KotlinNotes</string>
     <string name="defaultNoteTitle">Note title</string>
     <string name="defaultNoteBody">Note body</string>
+    <string name="logout_menu_title">Exit</string>
+    <string name="logout_dialog_title">Exit</string>
+    <string name="logout_dialog_message">Are you sure?</string>
+    <string name="logout_dialog_ok">Yes</string>
+    <string name="logout_dialog_cancel">Cancel</string>
 </resources>
