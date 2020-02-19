@@ -1,5 +1,6 @@
 package ru.geekbrains.kotlinnotes.data.provider
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
@@ -9,20 +10,18 @@ import ru.geekbrains.kotlinnotes.data.entity.User
 import ru.geekbrains.kotlinnotes.data.errors.NoAuthException
 import ru.geekbrains.kotlinnotes.data.model.NoteResult
 
-class FireStoreProvider : RemoteDataProvider {
+class FireStoreProvider(private val firebaseAuth: FirebaseAuth, private val store: FirebaseFirestore) : RemoteDataProvider {
 
     companion object {
         private const val USER_COLLECTION = "users"
         private const val NOTES_COLLECTION = "notes"
     }
 
-    private val store by lazy { FirebaseFirestore.getInstance() }
-
     private val currentUser
-        get() = FirebaseAuth.getInstance().currentUser
+        get() = firebaseAuth.currentUser
 
     private val userNotesCollection: CollectionReference
-        get() = currentUser?.let {                                                                                                                                                                                                                                                                                                                                      //Я копипастил код с урока и не заметил эту надпись
+        get() = currentUser?.let {
             store.collection(USER_COLLECTION).document(it.uid).collection(NOTES_COLLECTION)
         } ?: throw NoAuthException()
 
@@ -32,6 +31,8 @@ class FireStoreProvider : RemoteDataProvider {
             User(firebaseUser.displayName ?: "", firebaseUser.email ?: "")
         }
     }
+
+
 
     override fun subscribeToAllNotes() = MutableLiveData<NoteResult>().apply {
         try {
@@ -67,6 +68,19 @@ class FireStoreProvider : RemoteDataProvider {
             userNotesCollection.document(note.id).set(note)
                 .addOnSuccessListener {
                     value = NoteResult.Success(note)
+                }.addOnFailureListener {
+                    value = NoteResult.Error(it)
+                }
+        } catch (e: Throwable){
+            value = NoteResult.Error(e)
+        }
+    }
+
+    override fun deleteNote(noteId: String): LiveData<NoteResult> = MutableLiveData<NoteResult>().apply {
+        try {
+            userNotesCollection.document(noteId).delete()
+                .addOnSuccessListener {
+                    value = NoteResult.Success(null)
                 }.addOnFailureListener {
                     value = NoteResult.Error(it)
                 }
